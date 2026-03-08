@@ -60,7 +60,7 @@ export default function SelectionPanel({ onContextSet, activeContext }) {
     return (
       <aside className="selection-panel">
         <div className="panel-header">
-          <h1>Cognivault</h1>
+          <h1>Syllabase</h1>
         </div>
         <p className="panel-loading">Loading...</p>
       </aside>
@@ -70,7 +70,7 @@ export default function SelectionPanel({ onContextSet, activeContext }) {
   return (
     <aside className="selection-panel">
       <div className="panel-header">
-        <h1>Cognivault</h1>
+        <h1>Syllabase</h1>
         <p>Course-aware AI Assistant</p>
       </div>
 

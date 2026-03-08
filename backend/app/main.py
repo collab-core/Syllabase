@@ -9,7 +9,7 @@ from app.routers.syllabus import router as syllabus_router
 from app.routers.topics import router as topics_router
 from app.routers.units import router as units_router
 
-app = FastAPI(title="Cognivault API")
+app = FastAPI(title="Syllabase API")
 
 app.add_middleware(
     CORSMiddleware,
