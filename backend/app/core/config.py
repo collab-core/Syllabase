@@ -10,11 +10,19 @@ def _parse_cors_origins(value: str | None) -> list[str]:
         return ["http://localhost:5173", "http://localhost:3000"]
     return [origin.strip() for origin in value.split(",") if origin.strip()]
 
+
+def _parse_cors_origin_regex(value: str | None) -> str | None:
+    if not value:
+        return None
+    regex = value.strip()
+    return regex or None
+
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 BACKEND_CORS_ORIGINS = _parse_cors_origins(os.getenv("BACKEND_CORS_ORIGINS"))
+BACKEND_CORS_ORIGIN_REGEX = _parse_cors_origin_regex(os.getenv("BACKEND_CORS_ORIGIN_REGEX"))
 
 if not SUPABASE_URL or not SUPABASE_KEY:
     raise RuntimeError(

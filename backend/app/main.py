@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.config import BACKEND_CORS_ORIGINS
+from app.core.config import BACKEND_CORS_ORIGINS, BACKEND_CORS_ORIGIN_REGEX
 from app.routers.courses import router as courses_router
 from app.routers.mcp import router as mcp_router
 from app.routers.programmes import router as programmes_router
@@ -15,6 +15,7 @@ app = FastAPI(title="Syllabase API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=BACKEND_CORS_ORIGINS,
+    allow_origin_regex=BACKEND_CORS_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
