@@ -1,15 +1,27 @@
 import { useState } from 'react'
-import SelectionPanel from './components/SelectionPanel'
-import ChatInterface from './components/ChatInterface'
+import CourseSelector from './components/CourseSelector'
+import MainChatArea from './components/MainChatArea'
 import './App.css'
 
 function App() {
-  const [activeContext, setActiveContext] = useState(null)
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [messages, setMessages] = useState([])
+
+  const handleNewChat = () => {
+    setMessages([])
+  }
 
   return (
     <div className="app">
-      <SelectionPanel onContextSet={setActiveContext} activeContext={activeContext} />
-      <ChatInterface activeContext={activeContext} />
+      <div className="animated-bg">
+        <div className="gradient-orb gradient-orb-1"></div>
+        <div className="gradient-orb gradient-orb-2"></div>
+        <div className="gradient-orb gradient-orb-3"></div>
+        <canvas id="particles-canvas"></canvas>
+      </div>
+      
+      <CourseSelector onSelectCourse={setSelectedCourse} selectedCourse={selectedCourse} />
+      <MainChatArea selectedCourse={selectedCourse} messages={messages} setMessages={setMessages} onNewChat={handleNewChat} />
     </div>
   )
 }

@@ -36,7 +36,7 @@ function clearChatFromStorage(courseId) {
   }
 }
 
-export default function ChatInterface({ activeContext }) {
+export default function ChatInterface({ activeContext, onNewChat }) {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -99,6 +99,17 @@ export default function ChatInterface({ activeContext }) {
       const updatedMessages = [...newMessages, assistantMsg]
       setMessages(updatedMessages)
       saveChatToStorage(activeContext.course.id, updatedMessages)
+
+      // Add to chat history in sidebar
+      const chatEntry = {
+        id: `${activeContext.course.id}-${Date.now()}`,
+        courseId: activeContext.course.id,
+        courseName: activeContext.course.name,
+        courseCode: activeContext.course.code,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }).replace(',', ''),
+        context: activeContext
+      }
+      if (onNewChat) onNewChat(chatEntry)
     } catch (err) {
       const errorMsg = { id: Date.now() + 1, role: 'error', content: err.message }
       const updatedMessages = [...newMessages, errorMsg]
@@ -129,23 +140,14 @@ export default function ChatInterface({ activeContext }) {
       <div className="chat-header">
         {hasContext ? (
           <>
-            <div className="course-badge">{activeContext.course.code}</div>
-            <div className="course-title">{activeContext.course.name}</div>
-            <div className="course-meta">
-              Sem {activeContext.semester} &middot; Reg {activeContext.regulationYear}
+            <div className="header-back">← Your assistant for the</div>
+            <div className="header-course">
+              {activeContext.course.code} (Reg. {activeContext.regulationYear})
             </div>
-            <button
-              className="clear-chat-btn"
-              onClick={() => setShowClearConfirm(true)}
-              title="Clear chat history"
-              aria-label="Clear chat history"
-            >
-              🗑️
-            </button>
           </>
         ) : (
           <div className="no-context-hint">
-            ← Select a programme, semester, regulation year, and course to start
+            Select a course from the sidebar to start chatting
           </div>
         )}
       </div>
@@ -153,9 +155,17 @@ export default function ChatInterface({ activeContext }) {
       <div className="messages-area">
         {messages.length === 0 && hasContext && (
           <div className="empty-state">
-            <div className="empty-icon">💬</div>
-            <p>Ask anything about <strong>{activeContext.course.name}</strong></p>
-            <p className="empty-hint">I'll answer based strictly on the course syllabus.</p>
+            <div className="assistant-welcome">
+              <div className="welcome-avatar">AI</div>
+              <div className="welcome-content">
+                <h3>Syllabase AI</h3>
+                <p className="welcome-greeting">Hello! How can I assist you today?</p>
+                <ul className="welcome-suggestions">
+                  <li>Ask any question related to your courses</li>
+                  <li>Get assistance with study materials, exams, and assignments.</li>
+                </ul>
+              </div>
+            </div>
           </div>
         )}
 
@@ -214,6 +224,7 @@ export default function ChatInterface({ activeContext }) {
           onClick={handleSend}
           disabled={!hasContext || !input.trim() || sending}
           aria-label="Send"
+          title="Send message"
         >
           {sending ? (
             <span className="send-spinner" />
